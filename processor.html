@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become — Voice Processor</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f11; color: #e8e8e6; min-height: 100vh; padding: 2rem 1rem; }
+h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+.subtitle { font-size: 13px; color: #666; margin-bottom: 1.5rem; }
+.upload-zone { border: 1.5px dashed #333; border-radius: 12px; padding: 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 1.5rem; }
+.upload-zone:hover, .upload-zone.dragover { border-color: #6c63d4; background: #1a1830; }
+.upload-zone.loaded { border-style: solid; border-color: #3a3a4a; background: #16161e; }
+.upload-zone p { font-size: 14px; color: #666; }
+.filename { color: #9d97e8; font-weight: 500; }
+.presets { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.preset-btn { flex: 1; min-width: 90px; padding: 10px 8px; border-radius: 10px; border: 0.5px solid #2a2a36; background: #16161e; color: #888; font-size: 12px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.preset-btn .pname { font-size: 13px; font-weight: 500; display: block; margin-bottom: 2px; }
+.preset-btn .psub { font-size: 10px; color: #555; display: block; }
+.preset-btn.active { border-color: #6c63d4; background: #1e1a3a; color: #9d97e8; }
+.preset-btn.active .psub { color: #6c63d4; }
+.section { background: #16161e; border: 0.5px solid #2a2a36; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.section-num { width: 20px; height: 20px; border-radius: 50%; background: #1e1a3a; border: 0.5px solid #3d3870; color: #9d97e8; font-size: 10px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.section-title { font-size: 15px; font-weight: 500; flex: 1; }
+.toggle-pill { display: flex; border: 0.5px solid #2a2a36; border-radius: 20px; overflow: hidden; }
+.toggle-pill button { padding: 4px 12px; font-size: 11px; border: none; background: transparent; color: #555; cursor: pointer; transition: all 0.15s; }
+.toggle-pill button.active { background: #1e1a3a; color: #9d97e8; }
+.gate-indicator { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: #1a1a1a; color: #444; border: 0.5px solid #2a2a36; }
+.gate-indicator.on { background: #0d1f12; color: #4caf74; border-color: #2a4a35; }
+.desc { font-size: 12px; color: #555; line-height: 1.6; margin-bottom: 1rem; }
+.param { margin-bottom: 12px; }
+.param:last-child { margin-bottom: 0; }
+.param-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+.steps { display: flex; border: 0.5px solid #2a2a36; border-radius: 8px; overflow: hidden; }
+.step-btn { flex: 1; padding: 6px 4px; font-size: 11px; background: transparent; border: none; border-right: 0.5px solid #2a2a36; color: #555; cursor: pointer; transition: all 0.15s; text-align: center; line-height: 1.3; }
+.step-btn:last-child { border-right: none; }
+.step-btn:hover { background: #1a1830; color: #aaa; }
+.step-btn.active { background: #1e1a3a; color: #9d97e8; }
+.step-btn.rec { position: relative; }
+.step-btn.rec::after { content: '★'; font-size: 8px; color: #6c63d4; position: absolute; top: 2px; right: 3px; }
+.step-val { font-size: 10px; color: #444; display: block; margin-top: 1px; }
+.step-btn.active .step-val { color: #6c63d4; }
+.gate-params { margin-top: 1rem; }
+.gate-params.hidden { display: none; }
+.playback-bar { position: sticky; bottom: 0; background: #0f0f11; border-top: 0.5px solid #2a2a36; padding: 1rem 0 0.5rem; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 8px; }
+.play-btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.play-btn { font-size: 13px; padding: 8px 16px; border-radius: 8px; border: 0.5px solid #333; background: transparent; color: #ccc; cursor: pointer; transition: all 0.15s; }
+.play-btn:hover { border-color: #6c63d4; color: #9d97e8; background: #1a1830; }
+.play-btn.active { background: #1e1a3a; border-color: #6c63d4; color: #9d97e8; }
+.play-btn.primary { background: #6c63d4; border-color: #6c63d4; color: #fff; }
+.play-btn.primary:hover { background: #5a52b8; }
+.dl-btn { font-size: 12px; padding: 6px 14px; border-radius: 8px; border: 0.5px solid #333; background: transparent; color: #888; cursor: pointer; margin-left: auto; transition: all 0.15s; }
+.dl-btn:hover { border-color: #6c63d4; color: #9d97e8; }
+.progress-bar { width: 100%; height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: #6c63d4; border-radius: 2px; width: 0%; transition: width 0.1s; }
+.status { font-size: 12px; color: #555; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Become — Voice Processor</h1>
+<p class="subtitle">Upload processed audio · tune self-voice parameters · download result</p>
+
+<div class="upload-zone" id="uploadZone">
+  <p id="uploadText">🎵 &nbsp;Drag & drop or click to upload audio</p>
+  <p style="font-size:11px;color:#444;margin-top:6px;">MP3 · WAV · M4A · OGG</p>
+</div>
+<input type="file" id="fileInput" accept="audio/*" style="display:none">
+
+<div class="presets">
+  <button class="preset-btn active" id="pre_0" onclick="applyPreset(0)"><span class="pname">No treatment</span><span class="psub">dry original</span></button>
+  <button class="preset-btn" id="pre_1" onclick="applyPreset(1)"><span class="pname">Light</span><span class="psub">subtle warmth</span></button>
+  <button class="preset-btn" id="pre_2" onclick="applyPreset(2)"><span class="pname">Bruno's pick</span><span class="psub">your setup</span></button>
+  <button class="preset-btn" id="pre_3" onclick="applyPreset(3)"><span class="pname">Heavy</span><span class="psub">even stronger</span></button>
+  <button class="preset-btn" id="pre_4" onclick="applyPreset(4)"><span class="pname">Custom</span><span class="psub">fine tune below</span></button>
+</div>
+
+<!-- 0. NOISE GATE -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">0</span><span class="section-title">Noise gate</span>
+    <div class="toggle-pill"><button id="gateOnBtn" onclick="setGate(true)">On</button><button id="gateOffBtn" class="active" onclick="setGate(false)">Off</button></div>
+    <span class="gate-indicator" id="gateIndicator">off</span>
+  </div>
+  <p class="desc">Silences everything below a volume threshold — kills fan noise and mic noise floor between words.</p>
+  <div class="gate-params hidden" id="gateParams">
+    <div class="param"><div class="param-label">Threshold</div><div class="steps" id="s_gate_thresh" data-vals="-60,-45,-35,-25" data-fmt="gain" data-rec="2"></div></div>
+    <div class="param"><div class="param-label">Attack</div><div class="steps" id="s_gate_attack" data-vals="5,10,20,40" data-fmt="ms" data-rec="1"></div></div>
+    <div class="param"><div class="param-label">Release</div><div class="steps" id="s_gate_release" data-vals="100,200,400,800" data-fmt="ms" data-rec="2"></div></div>
+  </div>
+</div>
+
+<!-- 1. LOW SHELF -->
+<div class="section">
+  <div class="section-header"><span class="section-num">1</span><span class="section-title">Low-shelf boost</span></div>
+  <p class="desc">Adds warmth by boosting all frequencies below the cutoff — simulating chest and skull resonance.</p>
+  <div class="param"><div class="param-label">Gain</div><div class="steps" id="s_ls_gain" data-vals="0,5,10.5,16" data-fmt="gain" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Frequency</div><div class="steps" id="s_ls_freq" data-vals="200,200,260,300" data-fmt="hz" data-rec="2"></div></div>
+</div>
+
+<!-- 2. BELL -->
+<div class="section">
+  <div class="section-header"><span class="section-num">2</span><span class="section-title">Bell boost (body)</span></div>
+  <p class="desc">Targets the core power zone of your voice — the mid-range your skull naturally amplifies through bone conduction.</p>
+  <div class="param"><div class="param-label">Gain</div><div class="steps" id="s_bell_gain" data-vals="0,6,8,12" data-fmt="gain" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Frequency</div><div class="steps" id="s_bell_freq" data-vals="600,600,450,350" data-fmt="hz" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Q (width)</div><div class="steps" id="s_bell_q" data-vals="1,1,1,1.2" data-fmt="q" data-rec="2"></div></div>
+</div>
+
+<!-- 3. HIGH SHELF -->
+<div class="section">
+  <div class="section-header"><span class="section-num">3</span><span class="section-title">High-shelf cut</span></div>
+  <p class="desc">Removes the thin, crispy harshness microphones capture that bone conduction naturally filters out.</p>
+  <div class="param"><div class="param-label">Gain</div><div class="steps" id="s_hs_gain" data-vals="0,-4,-12,-20" data-fmt="gain" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Frequency</div><div class="steps" id="s_hs_freq" data-vals="4000,4000,2400,2000" data-fmt="hz" data-rec="2"></div></div>
+</div>
+
+<!-- 4. DE-ESSER -->
+<div class="section">
+  <div class="section-header"><span class="section-num">4</span><span class="section-title">De-esser</span></div>
+  <p class="desc">Tames harsh S and Sh sounds — transparent on normal speech, surgical on sibilance.</p>
+  <div class="param"><div class="param-label">Frequency</div><div class="steps" id="s_de_freq" data-vals="7000,7000,7000,7000" data-fmt="hz" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Threshold</div><div class="steps" id="s_de_thresh" data-vals="0,-15,-20,-28" data-fmt="gain" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Reduction</div><div class="steps" id="s_de_reduction" data-vals="0,-4,-8,-14" data-fmt="gain" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Bandwidth (Q)</div><div class="steps" id="s_de_q" data-vals="2,2,2,1.5" data-fmt="q" data-rec="2"></div></div>
+</div>
+
+<!-- 5. HARMONIC -->
+<div class="section">
+  <div class="section-header"><span class="section-num">5</span><span class="section-title">Harmonic enhancer</span></div>
+  <p class="desc">Generates overtones so your brain perceives bass that phone speakers can't physically produce.</p>
+  <div class="param"><div class="param-label">Fundamental</div><div class="steps" id="s_harm_freq" data-vals="150,150,120,100" data-fmt="hz" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Intensity</div><div class="steps" id="s_harm_int" data-vals="0,35,65,85" data-fmt="pct" data-rec="2"></div></div>
+</div>
+
+<!-- 6. MICRO-DELAY -->
+<div class="section">
+  <div class="section-header"><span class="section-num">6</span><span class="section-title">Micro-delay</span></div>
+  <p class="desc">Simulates the timing difference between air-conducted and bone-conducted sound — makes it feel internal.</p>
+  <div class="param"><div class="param-label">Delay</div><div class="steps" id="s_delay_ms" data-vals="0,1,1.1,2" data-fmt="ms" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Wet mix</div><div class="steps" id="s_delay_wet" data-vals="0,40,60,70" data-fmt="pct" data-rec="2"></div></div>
+</div>
+
+<!-- 7. STEREO -->
+<div class="section">
+  <div class="section-header"><span class="section-num">7</span><span class="section-title">Stereo narrowing</span></div>
+  <p class="desc">Collapses the stereo image toward mono — your inner voice comes from inside your head, not from space around you.</p>
+  <div class="param"><div class="param-label">Narrowing</div><div class="steps" id="s_stereo_n" data-vals="0,85,100,100" data-fmt="pct" data-rec="2"></div></div>
+</div>
+
+<!-- 8. COMPRESSION -->
+<div class="section">
+  <div class="section-header"><span class="section-num">8</span><span class="section-title">Compression</span></div>
+  <p class="desc">Evens out volume to match the smooth, controlled quality of your inner voice.</p>
+  <div class="param"><div class="param-label">Ratio</div><div class="steps" id="s_comp_ratio" data-vals="1,3,6,12" data-fmt="ratio" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Threshold</div><div class="steps" id="s_comp_thresh" data-vals="0,-24,-30,-45" data-fmt="gain" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Attack</div><div class="steps" id="s_comp_attack" data-vals="10,10,9,5" data-fmt="ms" data-rec="2"></div></div>
+  <div class="param"><div class="param-label">Release</div><div class="steps" id="s_comp_release" data-vals="150,150,140,200" data-fmt="ms" data-rec="2"></div></div>
+</div>
+
+<!-- 9. WARMTH -->
+<div class="section">
+  <div class="section-header"><span class="section-num">9</span><span class="section-title">Warmth / saturation</span></div>
+  <p class="desc">Adds analog-style harmonics that make the voice feel richer and less digital.</p>
+  <div class="param"><div class="param-label">Intensity</div><div class="steps" id="s_warm_int" data-vals="0,25,50,75" data-fmt="pct" data-rec="2"></div></div>
+</div>
+
+<div class="playback-bar">
+  <div class="play-btns">
+    <button class="play-btn" id="btnOrig" onclick="play(false)">▶ Play original</button>
+    <button class="play-btn primary" id="btnProc" onclick="play(true)">▶ Play processed</button>
+    <button class="play-btn" onclick="stopAll()">■ Stop</button>
+    <button class="dl-btn" onclick="downloadProcessed()">↓ Download processed</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <p class="status" id="status">Upload an audio file to begin</p>
+</div>
+
+<script>
+var audioBuffer=null,srcNode=null,actx=null,progTimer=null,activeMasterPreset=0,gateEnabled=false;
+var PARAM_IDS=['s_ls_gain','s_ls_freq','s_bell_gain','s_bell_freq','s_bell_q','s_hs_gain','s_hs_freq','s_de_freq','s_de_thresh','s_de_reduction','s_de_q','s_harm_freq','s_harm_int','s_delay_ms','s_delay_wet','s_stereo_n','s_comp_ratio','s_comp_thresh','s_comp_attack','s_comp_release','s_warm_int'];
+var GATE_IDS=['s_gate_thresh','s_gate_attack','s_gate_release'];
+
+function fmtStep(val,fmt){val=parseFloat(val);if(fmt==='gain')return(val>=0?'+':'')+val.toFixed(1)+' dB';if(fmt==='hz')return Math.round(val)+' Hz';if(fmt==='ms')return parseFloat(val).toFixed(1)+' ms';if(fmt==='ratio')return parseFloat(val).toFixed(1)+':1';if(fmt==='q')return parseFloat(val).toFixed(1);if(fmt==='pct')return Math.round(val)+'%';return val;}
+
+function buildSteps(container){var vals=container.dataset.vals.split(','),fmt=container.dataset.fmt,rec=parseInt(container.dataset.rec||'2'),labels=['Original','Light','Medium','Heavy'];container.innerHTML='';for(var i=0;i<4;i++){var btn=document.createElement('button');btn.className='step-btn'+(i===rec?' rec':'')+(i===0?' active':'');btn.innerHTML=labels[i]+'<span class="step-val">'+fmtStep(vals[i],fmt)+'</span>';(function(idx,el){el.addEventListener('click',function(){setStepActive(container,idx);onParamChange();});})(i,btn);container.appendChild(btn);}}
+
+function setStepActive(container,idx){var btns=container.querySelectorAll('.step-btn');for(var i=0;i<btns.length;i++)btns[i].classList.toggle('active',i===idx);}
+function getVal(id){var c=document.getElementById(id),vals=c.dataset.vals.split(','),btns=c.querySelectorAll('.step-btn');for(var i=0;i<btns.length;i++)if(btns[i].classList.contains('active'))return parseFloat(vals[i]);return parseFloat(vals[0]);}
+function onParamChange(){activeMasterPreset=4;for(var i=0;i<5;i++)document.getElementById('pre_'+i).classList.toggle('active',i===4);}
+function applyPreset(idx){activeMasterPreset=idx;for(var i=0;i<5;i++)document.getElementById('pre_'+i).classList.toggle('active',i===idx);if(idx===4)return;var si=idx===0?0:idx===1?1:idx===2?2:3;PARAM_IDS.forEach(function(pid){var c=document.getElementById(pid);if(c)setStepActive(c,si);});GATE_IDS.forEach(function(pid){var c=document.getElementById(pid);if(c)setStepActive(c,Math.min(si,3));});}
+function setGate(on){gateEnabled=on;document.getElementById('gateOnBtn').classList.toggle('active',on);document.getElementById('gateOffBtn').classList.toggle('active',!on);document.getElementById('gateParams').classList.toggle('hidden',!on);var ind=document.getElementById('gateIndicator');ind.textContent=on?'active':'off';ind.classList.toggle('on',on);}
+
+function makeWS(amount,type){var n=512,c=new Float32Array(n);for(var i=0;i<n;i++){var x=(i*2/(n-1))-1;if(type==='soft')c[i]=x*(1+amount)/(1+amount*Math.abs(x));else if(type==='hard')c[i]=Math.max(-1,Math.min(1,x*(1+amount*5)));else c[i]=(3+amount)*x*20*Math.PI/180/(Math.PI+amount*Math.abs(x));}return c;}
+
+function buildChain(ctx,processed){
+  var src=ctx.createBufferSource();src.buffer=audioBuffer;
+  if(!processed||activeMasterPreset===0){src.connect(ctx.destination);src.start(0);return src;}
+  var chainStart=src;
+  if(gateEnabled){
+    var gThresh=getVal('s_gate_thresh'),gAttack=getVal('s_gate_attack')/1000,gRelease=getVal('s_gate_release')/1000;
+    var threshLin=Math.pow(10,gThresh/20),kneeWidth=threshLin*1.5,floor=0.05;
+    var holdSamples=Math.round(ctx.sampleRate*0.15),hardCloseSamples=Math.round(ctx.sampleRate*0.6);
+    var lookaheadSamples=Math.round(ctx.sampleRate*0.04),decayBleed=0.9999;
+    var rmsWin=Math.round(ctx.sampleRate*0.01),rmsBuf=new Float32Array(rmsWin).fill(0),rmsPtr=0,rmsSum=0;
+    var audioBuf=new Float32Array(lookaheadSamples).fill(0),gainBuf=new Float32Array(lookaheadSamples).fill(floor),bufPtr=0;
+    var smoothGain=floor,gainSmooth=0.998,envLevel=0,holdCounter=0,silenceSamples=0;
+    var gate=ctx.createScriptProcessor(2048,1,1);
+    gate.onaudioprocess=function(e){
+      var inp=e.inputBuffer.getChannelData(0),out=e.outputBuffer.getChannelData(0);
+      for(var i=0;i<inp.length;i++){
+        var sample=inp[i],old=rmsBuf[rmsPtr];rmsBuf[rmsPtr]=sample*sample;rmsSum=rmsSum-old+rmsBuf[rmsPtr];rmsPtr=(rmsPtr+1)%rmsWin;
+        var rms=Math.sqrt(Math.max(0,rmsSum/rmsWin));
+        if(rms>envLevel)envLevel+=(1-Math.exp(-1/(ctx.sampleRate*gAttack)))*(rms-envLevel);
+        else envLevel+=(1-Math.exp(-1/(ctx.sampleRate*gRelease)))*(rms-envLevel);
+        envLevel*=decayBleed;
+        if(envLevel>=threshLin){holdCounter=holdSamples;silenceSamples=0;}
+        else{if(holdCounter>0)holdCounter--;else silenceSamples++;}
+        if(silenceSamples>hardCloseSamples/2)envLevel*=0.999;
+        var activeFloor=silenceSamples>hardCloseSamples?0.0:floor;
+        var effectiveLevel=holdCounter>0?threshLin+kneeWidth:envLevel;
+        var targetGain;
+        if(effectiveLevel>=threshLin+kneeWidth)targetGain=1;
+        else if(effectiveLevel<=threshLin-kneeWidth)targetGain=activeFloor;
+        else{var t=(effectiveLevel-(threshLin-kneeWidth))/(kneeWidth*2);targetGain=activeFloor+(1-activeFloor)*(t*t*(3-2*t));}
+        smoothGain=gainSmooth*smoothGain+(1-gainSmooth)*targetGain;
+        gainBuf[bufPtr]=smoothGain;audioBuf[bufPtr]=sample;
+        var gainSum=0;for(var j=0;j<lookaheadSamples;j++)gainSum+=gainBuf[j];
+        var previewGain=gainSum/lookaheadSamples;
+        var readPtr=(bufPtr+1)%lookaheadSamples;out[i]=audioBuf[readPtr]*previewGain;bufPtr=readPtr;
+      }
+    };
+    src.connect(gate);chainStart=gate;
+  }
+  var ls=ctx.createBiquadFilter();ls.type='lowshelf';ls.frequency.value=getVal('s_ls_freq');ls.gain.value=getVal('s_ls_gain');
+  var bell=ctx.createBiquadFilter();bell.type='peaking';bell.frequency.value=getVal('s_bell_freq');bell.gain.value=getVal('s_bell_gain');bell.Q.value=getVal('s_bell_q');
+  var hs=ctx.createBiquadFilter();hs.type='highshelf';hs.frequency.value=getVal('s_hs_freq');hs.gain.value=getVal('s_hs_gain');
+  var deFreq=getVal('s_de_freq'),deReduction=getVal('s_de_reduction'),deQ=getVal('s_de_q');
+  var deDry=ctx.createBiquadFilter();deDry.type='notch';deDry.frequency.value=deFreq;deDry.Q.value=deQ;
+  var deBP=ctx.createBiquadFilter();deBP.type='bandpass';deBP.frequency.value=deFreq;deBP.Q.value=deQ;
+  var deWetG=ctx.createGain();deWetG.gain.value=deReduction<0?Math.pow(10,deReduction/20):1;
+  var deMix=ctx.createGain();deMix.gain.value=1;
+  var harmBP=ctx.createBiquadFilter();harmBP.type='bandpass';harmBP.frequency.value=getVal('s_harm_freq');harmBP.Q.value=1.5;
+  var harmWS=ctx.createWaveShaper();harmWS.curve=makeWS(getVal('s_harm_int')/100*3,'tube');
+  var harmWet=ctx.createGain();harmWet.gain.value=getVal('s_harm_int')/100*0.6;
+  var harmDry=ctx.createGain();harmDry.gain.value=1.0;
+  var harmOut=ctx.createGain();harmOut.gain.value=1.0;
+  var delay=ctx.createDelay(0.1);delay.delayTime.value=getVal('s_delay_ms')/1000;
+  var dryG=ctx.createGain();dryG.gain.value=1-getVal('s_delay_wet')/100;
+  var wetG=ctx.createGain();wetG.gain.value=getVal('s_delay_wet')/100;
+  var delayOut=ctx.createGain();delayOut.gain.value=1.0;
+  var nw=getVal('s_stereo_n')/100,monoG=ctx.createGain();monoG.gain.value=nw;
+  var stereoG=ctx.createGain();stereoG.gain.value=1-nw;
+  var stereoOut=ctx.createGain();stereoOut.gain.value=1.0;
+  var comp=ctx.createDynamicsCompressor();comp.ratio.value=getVal('s_comp_ratio');comp.threshold.value=getVal('s_comp_thresh');comp.attack.value=getVal('s_comp_attack')/1000;comp.release.value=getVal('s_comp_release')/1000;comp.knee.value=6;
+  var wAmt=getVal('s_warm_int')/100,warmWS=ctx.createWaveShaper();warmWS.curve=makeWS(wAmt,'soft');
+  var warmDry=ctx.createGain();warmDry.gain.value=0.65;var warmWet=ctx.createGain();warmWet.gain.value=wAmt*0.45;var warmOut=ctx.createGain();warmOut.gain.value=1.0;
+  chainStart.connect(ls);ls.connect(bell);bell.connect(hs);
+  hs.connect(deDry);deDry.connect(deMix);hs.connect(deBP);deBP.connect(deWetG);deWetG.connect(deMix);
+  deMix.connect(harmDry);harmDry.connect(harmOut);deMix.connect(harmBP);harmBP.connect(harmWS);harmWS.connect(harmWet);harmWet.connect(harmOut);
+  harmOut.connect(dryG);harmOut.connect(delay);delay.connect(wetG);dryG.connect(delayOut);wetG.connect(delayOut);
+  delayOut.connect(monoG);delayOut.connect(stereoG);monoG.connect(stereoOut);stereoG.connect(stereoOut);
+  stereoOut.connect(comp);comp.connect(warmDry);comp.connect(warmWS);warmWS.connect(warmWet);warmDry.connect(warmOut);warmWet.connect(warmOut);warmOut.connect(ctx.destination);
+  src.start(0);return src;
+}
+
+function stopAll(){if(srcNode){try{srcNode.stop();}catch(e){}srcNode=null;}if(actx){try{actx.close();}catch(e){}actx=null;}clearInterval(progTimer);document.getElementById('progressFill').style.width='0%';document.getElementById('btnOrig').classList.remove('active');document.getElementById('btnProc').classList.remove('active');}
+
+function play(processed){
+  if(!audioBuffer){setStatus('Upload a file first');return;}stopAll();
+  actx=new(window.AudioContext||window.webkitAudioContext)();srcNode=buildChain(actx,processed);
+  var dur=audioBuffer.duration,t0=actx.currentTime;
+  progTimer=setInterval(function(){var p=Math.min((actx.currentTime-t0)/dur*100,100);document.getElementById('progressFill').style.width=p+'%';if(p>=100)clearInterval(progTimer);},100);
+  document.getElementById('btnOrig').classList.toggle('active',!processed);document.getElementById('btnProc').classList.toggle('active',processed);
+  setStatus(processed?'Playing processed...':'Playing original...');
+  srcNode.onended=function(){clearInterval(progTimer);document.getElementById('progressFill').style.width='0%';document.getElementById('btnOrig').classList.remove('active');document.getElementById('btnProc').classList.remove('active');setStatus('Done');};
+}
+
+function downloadProcessed(){
+  if(!audioBuffer){setStatus('Upload a file first');return;}setStatus('Rendering...');
+  var off=new OfflineAudioContext(audioBuffer.numberOfChannels,audioBuffer.length,audioBuffer.sampleRate);
+  buildChain(off,true);
+  off.startRendering().then(function(rendered){var wav=toWav(rendered);var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([wav],{type:'audio/wav'}));a.download='self-voice.wav';a.click();setStatus('Downloaded!');});
+}
+
+function toWav(buf){var nCh=buf.numberOfChannels,sr=buf.sampleRate,len=buf.length,ab=new ArrayBuffer(44+len*nCh*2),v=new DataView(ab);function s(o,str){for(var i=0;i<str.length;i++)v.setUint8(o+i,str.charCodeAt(i));}s(0,'RIFF');v.setUint32(4,36+len*nCh*2,true);s(8,'WAVE');s(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,nCh,true);v.setUint32(24,sr,true);v.setUint32(28,sr*nCh*2,true);v.setUint16(32,nCh*2,true);v.setUint16(34,16,true);s(36,'data');v.setUint32(40,len*nCh*2,true);var off=44;for(var i=0;i<len;i++)for(var c=0;c<nCh;c++){var x=Math.max(-1,Math.min(1,buf.getChannelData(c)[i]));v.setInt16(off,x<0?x*0x8000:x*0x7FFF,true);off+=2;}return ab;}
+
+function setStatus(msg){document.getElementById('status').textContent=msg;}
+
+function loadFile(file){
+  setStatus('Loading...');var tmp=new(window.AudioContext||window.webkitAudioContext)();
+  file.arrayBuffer().then(function(ab){return tmp.decodeAudioData(ab);}).then(function(decoded){audioBuffer=decoded;tmp.close();document.getElementById('uploadZone').classList.add('loaded');document.getElementById('uploadText').innerHTML='<span class="filename">'+file.name+'</span>';setStatus('Ready — '+audioBuffer.duration.toFixed(1)+'s');});
+}
+
+var uz=document.getElementById('uploadZone');
+document.getElementById('fileInput').addEventListener('change',function(e){if(e.target.files[0])loadFile(e.target.files[0]);});
+uz.addEventListener('click',function(){document.getElementById('fileInput').click();});
+uz.addEventListener('dragover',function(e){e.preventDefault();uz.classList.add('dragover');});
+uz.addEventListener('dragleave',function(){uz.classList.remove('dragover');});
+uz.addEventListener('drop',function(e){e.preventDefault();uz.classList.remove('dragover');if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+document.querySelectorAll('.steps').forEach(function(el){buildSteps(el);});
+applyPreset(0);
+</script>
+</body>
+</html>

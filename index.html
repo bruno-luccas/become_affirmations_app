@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Become</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #09090f;
+  --surface: #13131e;
+  --border: #1e1e2e;
+  --purple: #7c6fcd;
+  --purple-light: #a89fe8;
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --success: #4caf74;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 0; }
+
+/* Pages */
+.page { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 420px; min-height: 100vh; padding: 2.5rem 1.5rem; text-align: center; }
+.page.active { display: flex; }
+
+/* Progress dots */
+.dots { display: flex; gap: 6px; margin-bottom: 2.5rem; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
+.dot.active { background: var(--purple); width: 18px; border-radius: 3px; }
+.dot.done { background: var(--purple-light); opacity: 0.4; }
+
+/* Typography */
+.logo { font-size: 13px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 1rem; }
+h1 { font-size: 38px; font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.1; }
+h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
+.body-text { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+.highlight { color: var(--purple-light); }
+
+/* Buttons */
+.btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; }
+.btn-primary { background: var(--purple); color: #fff; }
+.btn-primary:hover { background: #6a5eb8; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-secondary { background: transparent; color: var(--muted); border: 0.5px solid var(--border); font-size: 14px; padding: 12px; }
+.btn-secondary:hover { border-color: var(--purple); color: var(--purple-light); }
+.btn-ghost { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; padding: 8px; text-decoration: underline; }
+
+/* Script box */
+.script-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; text-align: left; font-size: 15px; line-height: 1.8; color: var(--text); font-style: italic; }
+
+/* Record button */
+.record-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.record-btn { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--purple); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; position: relative; }
+.record-btn.recording { border-color: #e05555; background: rgba(224,85,85,0.1); animation: pulse 1.5s infinite; }
+.record-btn .dot-inner { width: 28px; height: 28px; border-radius: 50%; background: #e05555; transition: all 0.2s; }
+.record-btn.recording .dot-inner { border-radius: 4px; width: 22px; height: 22px; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(224,85,85,0.3)} 50%{box-shadow:0 0 0 12px rgba(224,85,85,0);} }
+.record-label { font-size: 13px; color: var(--muted); }
+.record-label.active { color: #e05555; }
+.playback-row { display: flex; gap: 10px; width: 100%; }
+.playback-row button { flex: 1; }
+
+/* Affirmation picker */
+.counter { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
+.counter span { color: var(--purple-light); font-weight: 600; }
+.accordion { width: 100%; text-align: left; margin-bottom: 1rem; max-height: 45vh; overflow-y: auto; border-radius: 12px; border: 0.5px solid var(--border); }
+.acc-topic { border-bottom: 0.5px solid var(--border); }
+.acc-topic:last-child { border-bottom: none; }
+.acc-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 500; background: var(--surface); transition: background 0.15s; user-select: none; }
+.acc-header:hover { background: #1a1a2a; }
+.acc-header .topic-meta { display: flex; align-items: center; gap: 8px; }
+.acc-header .topic-count { font-size: 11px; color: var(--muted); }
+.acc-header .topic-sel { font-size: 11px; color: var(--purple-light); display: none; }
+.acc-header .topic-sel.visible { display: inline; }
+.acc-arrow { font-size: 10px; color: var(--muted); transition: transform 0.2s; }
+.acc-header.open .acc-arrow { transform: rotate(180deg); }
+.acc-body { display: none; padding: 8px 0; background: var(--bg); }
+.acc-body.open { display: block; }
+.aff-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 16px; cursor: pointer; transition: background 0.1s; }
+.aff-item:hover { background: #1a1a2a; }
+.aff-check { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--border); background: transparent; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.aff-check.checked { background: var(--purple); border-color: var(--purple); }
+.aff-check.checked::after { content: '✓'; font-size: 11px; color: #fff; }
+.aff-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* Custom input */
+.custom-row { display: flex; gap: 8px; margin-bottom: 1rem; width: 100%; }
+.custom-input { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; outline: none; }
+.custom-input:focus { border-color: var(--purple); }
+.custom-add { padding: 10px 16px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; color: var(--purple-light); font-size: 13px; cursor: pointer; white-space: nowrap; }
+.custom-add:hover { border-color: var(--purple); }
+
+/* Loading */
+.loading-steps { text-align: left; width: 100%; margin-bottom: 2rem; }
+.load-step { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--muted); }
+.load-step:last-child { border-bottom: none; }
+.load-step .step-icon { width: 20px; text-align: center; font-size: 16px; }
+.load-step.done { color: var(--text); }
+.load-step.done .step-icon::after { content: '✓'; color: var(--success); font-size: 14px; }
+.load-step.active { color: var(--purple-light); }
+.spin { display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Audio player */
+.player-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 16px; padding: 1.5rem; width: 100%; margin-bottom: 1.5rem; }
+.player-title { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
+.player-controls { display: flex; gap: 10px; align-items: center; }
+.play-pause { width: 48px; height: 48px; border-radius: 50%; background: var(--purple); border: none; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.progress-wrap { flex: 1; }
+.progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
+.progress-fill { height: 100%; background: var(--purple); width: 0%; transition: width 0.1s; }
+.progress-time { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+.aff-preview { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 1rem; min-height: 40px; line-height: 1.6; }
+
+/* Disclaimer */
+.disclaimer { font-size: 11px; color: var(--muted); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 1rem; line-height: 1.6; text-align: left; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: Welcome -->
+<div class="page active" id="page1">
+  <div class="logo">Become</div>
+  <h1>Your voice.<br>Your words.<br><span class="highlight">While you sleep.</span></h1>
+  <p class="body-text">The most powerful voice you'll ever hear is your own — tuned to how you truly hear yourself from the inside.</p>
+  <button class="btn btn-primary" onclick="goTo(2)">Begin your journey</button>
+</div>
+
+<!-- PAGE 2: The Why -->
+<div class="page" id="page2">
+  <div class="dots" id="dots2"></div>
+  <div class="logo">Become</div>
+  <h2>You've never really heard your own voice.</h2>
+  <p class="body-text">What you hear on recordings sounds wrong — because it is. You normally hear yourself through your <span class="highlight">bones</span>, not just through air.<br><br>Become recreates that voice. The one only you can hear. And plays your affirmations in it, every night, while you sleep.</p>
+  <button class="btn btn-primary" onclick="goTo(3)">I'm ready</button>
+  <button class="btn-ghost" onclick="goTo(1)">← Back</button>
+</div>
+
+<!-- PAGE 3: Voice capture -->
+<div class="page" id="page3">
+  <div class="dots" id="dots3"></div>
+  <div class="logo">Become</div>
+  <h2>Let's capture your voice</h2>
+  <p class="body-text" style="margin-bottom:1rem;">Read the text below aloud, naturally, at your normal pace.</p>
+  <div class="script-box">"Every day I grow stronger and more confident. I am grateful for this moment and all that I am becoming. My voice carries my truth and my truth has power."</div>
+  <div class="record-wrap">
+    <button class="record-btn" id="recordBtn" onclick="toggleRecord()">
+      <div class="dot-inner"></div>
+    </button>
+    <span class="record-label" id="recordLabel">Tap to record</span>
+  </div>
+  <div class="playback-row" id="playbackRow" style="display:none;">
+    <button class="btn btn-secondary" onclick="playBack()">▶ Play back</button>
+    <button class="btn btn-secondary" onclick="reRecord()">↺ Re-record</button>
+  </div>
+  <button class="btn btn-primary" id="voiceNext" style="display:none;margin-top:1rem;" onclick="goTo(4)">Sounds good →</button>
+  <button class="btn-ghost" onclick="goTo(2)">← Back</button>
+</div>
+
+<!-- PAGE 4: Pick affirmations -->
+<div class="page" id="page4">
+  <div class="dots" id="dots4"></div>
+  <div class="logo">Become</div>
+  <h2>What do you want to become?</h2>
+  <p class="counter">Pick up to 50 affirmations · <span id="selCount">0</span> selected</p>
+  <div class="accordion" id="accordion"></div>
+  <div class="custom-row">
+    <input class="custom-input" id="customInput" placeholder="Add your own affirmation..." maxlength="120">
+    <button class="custom-add" onclick="addCustom()">+ Add</button>
+  </div>
+  <div class="disclaimer" id="sensitiveDisclaimer" style="display:none;">These affirmations support emotional wellbeing but are not a substitute for professional mental health support. If you're struggling, please reach out to a qualified professional.</div>
+  <button class="btn btn-primary" id="createBtn" disabled onclick="goTo(5)">Create my audio →</button>
+  <button class="btn-ghost" onclick="goTo(3)">← Back</button>
+</div>
+
+<!-- PAGE 5: Loading -->
+<div class="page" id="page5">
+  <div class="dots" id="dots5"></div>
+  <div class="logo">Become</div>
+  <h2>Creating your voice...</h2>
+  <p class="body-text" style="margin-bottom:1.5rem;">This takes about 30 seconds.</p>
+  <div class="loading-steps" id="loadingSteps">
+    <div class="load-step" id="ls1"><span class="step-icon">○</span>Preparing your voice sample</div>
+    <div class="load-step" id="ls2"><span class="step-icon">○</span>Synthesizing your affirmations</div>
+    <div class="load-step" id="ls3"><span class="step-icon">○</span>Tuning to your inner voice</div>
+    <div class="load-step" id="ls4"><span class="step-icon">○</span>Merging your audio session</div>
+  </div>
+</div>
+
+<!-- PAGE 6: Ready -->
+<div class="page" id="page6">
+  <div class="dots" id="dots6"></div>
+  <div class="logo">Become</div>
+  <h2>Your voice is ready. 🌙</h2>
+  <p class="body-text" style="margin-bottom:1rem;">Set your volume to about 30% and play it softly as you fall asleep.</p>
+  <div class="player-card">
+    <div class="player-title">Your affirmation session · <span id="affCount">0</span> affirmations</div>
+    <div class="player-controls">
+      <button class="play-pause" id="playPauseBtn" onclick="togglePlay()">▶</button>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+        <div class="progress-time"><span id="pCurrent">0:00</span><span id="pTotal">0:00</span></div>
+      </div>
+    </div>
+    <div class="aff-preview" id="affPreview">Press play to begin...</div>
+  </div>
+  <button class="btn btn-primary" onclick="downloadAudio()">↓ Download my affirmations</button>
+  <button class="btn btn-secondary" onclick="goTo(4)">Choose different affirmations</button>
+  <button class="btn-ghost" onclick="goTo(1)">Start over</button>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+var PACKS = {
+  "Confidence": ["I trust my own voice and my own judgment.","I walk into every room knowing I belong there.","I am capable of far more than I give myself credit for.","My presence makes a difference.","I speak with clarity and people listen.","I back myself even when others don't.","Courage feels more natural to me every day.","I am becoming someone I am proud of.","I handle challenges with calm and capability.","My confidence grows with every step I take.","I don't need permission to take up space.","I believe in my ability to figure things out.","I am prepared, capable, and ready.","I lead with conviction and act with purpose.","The more I trust myself, the easier life becomes."],
+  "Self-worth": ["I am enough exactly as I am right now.","My value does not depend on what I produce.","I deserve love without having to earn it.","I release the need for outside approval.","I am worthy of good things happening to me.","I treat myself with the same kindness I give others.","My worth is not up for debate.","I honor my needs without guilt.","I am allowed to choose myself.","I stop shrinking to make others comfortable.","I belong in the rooms I enter.","I am more than my mistakes and more than my past.","Every part of me deserves care and respect.","I no longer apologize for who I am.","I am someone worth knowing and worth loving."],
+  "Inner Peace": ["I release what I cannot control.","Peace is available to me in every moment.","I breathe in calm and breathe out tension.","My mind is allowed to rest.","I choose stillness over chaos.","I am at home inside myself.","I let go of the day and return to myself.","Silence nourishes me.","I stop fighting what is and trust what will be.","My inner world is calm, quiet, and safe.","I don't need to solve everything tonight.","I release the weight of the day with each breath.","Tranquility is my natural state.","I am grounded, centered, and at ease.","All is well, and I am safe."],
+  "Resilience": ["I have survived everything life has thrown at me so far.","Difficult moments make me deeper, not broken.","I bend but I do not break.","Every setback is teaching me something I needed to know.","I get back up — always.","My strength surprises me.","I am built for this.","Challenges reveal what I am made of.","I grow stronger on the other side of hard things.","I trust my ability to handle whatever comes.","I have been through worse and I am still here.","My roots go deep. I do not fall easily.","I recover faster than I used to.","Every hard day adds to my foundation.","I choose to keep going."],
+  "Sleep & Rest": ["I give myself full permission to rest tonight.","My body knows how to sleep deeply and restore itself.","I release the thoughts of today and drift into peace.","Sleep is safe and my mind is quiet.","My body is heavy, warm, and completely relaxed.","I let go of everything that is not this moment.","Tomorrow's problems belong to tomorrow.","I breathe slowly and my nervous system softens.","Rest is not laziness — it is how I become stronger.","My mind grows still like water with no wind.","I trust the night to hold me gently.","Each breath carries me deeper into rest.","I deserve this sleep and this silence.","My dreams are peaceful and my sleep is deep.","I wake refreshed, restored, and ready."],
+  "Gratitude": ["I notice the good that surrounds me right now.","My life contains more beauty than I usually see.","I am thankful for my body and all it does for me.","Small moments carry enormous gifts.","I have people who love me and I do not take that lightly.","Gratitude opens me up to receiving more.","Even hard chapters have something worth keeping.","I appreciate how far I have already come.","Today held something worth being grateful for.","I am alive and that alone is extraordinary.","I choose to see what I have instead of what I lack.","Abundance already exists in my life.","I am grateful for my own growth and effort.","The ordinary parts of my day are quietly extraordinary.","Thank you for this life, this breath, this moment."],
+  "Abundance & Money": ["Money flows to me as a result of the value I create.","I release my fear around finances and replace it with trust.","I am open to receiving more than I have before.","Wealth and I are becoming more comfortable with each other.","I make decisions from abundance, not from scarcity.","Opportunities find me because I am ready for them.","I deserve to be financially free.","My relationship with money is healing.","I give generously and receive graciously.","Every day I move closer to financial security.","I trust in my ability to earn, save, and grow.","Prosperity is a natural part of my life.","I attract opportunities that align with my values.","I am building something that lasts.","Abundance is not selfish — it allows me to give more."],
+  "Health & Body": ["I am grateful for this body and all it carries me through.","Every healthy choice I make is an act of self-respect.","My body is strong and growing stronger.","I listen to what my body needs and I honor it.","I nourish myself with food, rest, and movement.","Healing is always happening inside me.","I treat my body as something worth caring for.","My energy is returning and expanding.","I release tension from every muscle with each breath.","I am at peace with my body exactly as it is today.","Health is something I build one small decision at a time.","My body is on my side.","I move my body because I love it, not to punish it.","Vitality is my natural state.","I am becoming healthier in body, mind, and spirit."],
+  "Love & Connection": ["I am worthy of deep, genuine love.","I give love freely and receive it openly.","My heart is safe to open.","I attract relationships that are honest and nourishing.","I love fully without losing myself.","The right people are drawn to the real me.","I release past hurt and make room for new love.","I am a loving presence in the lives of others.","Vulnerability is a strength, not a weakness.","I deserve a love that feels like home.","My capacity to connect with others grows every day.","I forgive and I allow myself to be forgiven.","I am seen, heard, and deeply valued.","Love is not something I have to chase — it finds me.","I build relationships on honesty, trust, and kindness."],
+  "Courage": ["I do the hard thing even when I am afraid.","Fear is just excitement without breath.","I take one step forward even when I can't see the whole path.","I am braver than I know.","The things that scare me are often the things most worth doing.","I choose action over waiting for the perfect moment.","My courage compounds — every brave act makes the next one easier.","I speak my truth even when my voice shakes.","I am not reckless — I am willing.","Discomfort is where I grow.","I stop waiting for fear to disappear before I begin.","I back myself in the moments that matter.","Being courageous is a choice I make again and again.","I have done hard things before and I will do them again.","Today I choose courage over comfort."],
+  "Anxiety": ["I am safe in this moment, even when it doesn't feel that way.","I am learning to breathe through uncertainty.","My thoughts are not facts — I can let them pass.","I release what I cannot control and focus on what I can.","This feeling is temporary. It always passes.","My nervous system is learning to rest.","I don't have to solve everything right now.","One breath at a time is enough.","I am allowed to feel anxious and still move forward.","I am slowly building a calmer relationship with my mind.","My body is safe even when my thoughts say otherwise.","I have gotten through every anxious moment so far.","I give myself permission to slow down.","Peace is something I can return to — it is always there.","I trust that I can handle whatever comes, one moment at a time."],
+  "Depression": ["I give myself permission to feel without judgment.","I am not broken — I am going through something hard.","Small steps count. Today I did enough.","I have worth even on the days I feel nothing.","This heaviness is not permanent, even when it feels that way.","I am gentle with myself during this season.","I reach out when I need to — asking for help is strength.","Something in me keeps going, even now.","I deserve care and I am worthy of feeling better.","I notice the smallest good things and let them matter.","Rest is not giving up — it is what I need right now.","I have survived dark days before and I am still here.","I am allowed to take up space even when I feel invisible.","Healing is not linear and I stop punishing myself for that.","Even on hard days, I am moving toward the light."],
+  "Emotional Healing": ["I give myself permission to heal at my own pace.","I am not what happened to me.","I release old pain with compassion, not force.","My wounds are becoming wisdom.","I stop carrying what was never mine to carry.","I grieve what needs to be grieved and then I let go.","Healing happens in layers and I honor every one.","I forgive myself for what I didn't know then.","I am allowed to outgrow people, places, and old versions of myself.","Every emotion I feel is valid and deserves to be heard.","I hold my past self with tenderness, not shame.","The parts of me that are broken are also the parts that let light in.","I am no longer defined by my hardest moments.","I choose to write a new story from here.","I am healing — slowly, fully, and for good."]
+};
+var SENSITIVE = ["Anxiety","Depression","Emotional Healing"];
+var selected = {};
+var customAff = [];
+var currentPage = 1;
+var mediaRecorder = null;
+var audioChunks = [];
+var recordedBlob = null;
+var recordedURL = null;
+var isRecording = false;
+var synth = window.speechSynthesis;
+var utterances = [];
+var uttIdx = 0;
+var isPlaying = false;
+var playInterval = null;
+var sessionStart = 0;
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function goTo(n) {
+  document.getElementById('page' + currentPage).classList.remove('active');
+  currentPage = n;
+  document.getElementById('page' + n).classList.add('active');
+  renderDots(n);
+  if (n === 4) renderAccordion();
+  if (n === 5) runLoading();
+  if (n === 6) setupPlayer();
+  window.scrollTo(0,0);
+}
+
+function renderDots(page) {
+  var el = document.getElementById('dots' + page);
+  if (!el) return;
+  var total = 5;
+  var html = '';
+  for (var i = 1; i <= total; i++) {
+    var cls = i === page - 1 ? 'done' : i === page - 1 ? 'done' : '';
+    if (i < page - 1) cls = 'done';
+    else if (i === page - 1) cls = 'active';
+    html += '<div class="dot ' + cls + '"></div>';
+  }
+  el.innerHTML = html;
+}
+
+// ── Voice recording ───────────────────────────────────────────────────────────
+function toggleRecord() {
+  if (isRecording) stopRecord();
+  else startRecord();
+}
+
+function startRecord() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = function(e) { audioChunks.push(e.data); };
+    mediaRecorder.onstop = function() {
+      recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      recordedURL = URL.createObjectURL(recordedBlob);
+      document.getElementById('playbackRow').style.display = 'flex';
+      document.getElementById('voiceNext').style.display = 'block';
+      stream.getTracks().forEach(function(t) { t.stop(); });
+    };
+    mediaRecorder.start();
+    isRecording = true;
+    document.getElementById('recordBtn').classList.add('recording');
+    document.getElementById('recordLabel').textContent = 'Recording... tap to stop';
+    document.getElementById('recordLabel').classList.add('active');
+  }).catch(function() {
+    // If no mic permission, allow skipping for demo
+    document.getElementById('playbackRow').style.display = 'flex';
+    document.getElementById('voiceNext').style.display = 'block';
+    document.getElementById('recordLabel').textContent = 'Mic not available — demo mode';
+  });
+}
+
+function stopRecord() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  isRecording = false;
+  document.getElementById('recordBtn').classList.remove('recording');
+  document.getElementById('recordLabel').textContent = 'Recording saved ✓';
+  document.getElementById('recordLabel').classList.remove('active');
+}
+
+function playBack() {
+  if (!recordedURL) return;
+  var a = new Audio(recordedURL); a.play();
+}
+
+function reRecord() {
+  recordedBlob = null; recordedURL = null;
+  document.getElementById('playbackRow').style.display = 'none';
+  document.getElementById('voiceNext').style.display = 'none';
+  document.getElementById('recordLabel').textContent = 'Tap to record';
+  document.getElementById('recordLabel').classList.remove('active');
+}
+
+// ── Accordion ─────────────────────────────────────────────────────────────────
+function renderAccordion() {
+  var acc = document.getElementById('accordion');
+  acc.innerHTML = '';
+  Object.keys(PACKS).forEach(function(topic) {
+    var items = PACKS[topic];
+    if (!selected[topic]) selected[topic] = {};
+    var topicDiv = document.createElement('div');
+    topicDiv.className = 'acc-topic';
+    var selCount = Object.keys(selected[topic]).length;
+    topicDiv.innerHTML =
+      '<div class="acc-header" id="hdr_' + topic.replace(/ /g,'_') + '" onclick="toggleTopic(\'' + topic + '\')">' +
+        '<div class="topic-meta">' +
+          '<span>' + topic + '</span>' +
+          '<span class="topic-count">' + items.length + ' affirmations</span>' +
+          '<span class="topic-sel' + (selCount > 0 ? ' visible' : '') + '" id="sel_' + topic.replace(/ /g,'_') + '">' + (selCount > 0 ? selCount + ' selected' : '') + '</span>' +
+        '</div>' +
+        '<span class="acc-arrow">▼</span>' +
+      '</div>' +
+      '<div class="acc-body" id="body_' + topic.replace(/ /g,'_') + '">' +
+        items.map(function(aff, i) {
+          var checked = selected[topic][i] ? ' checked' : '';
+          return '<div class="aff-item" onclick="toggleAff(\'' + topic + '\',' + i + ')">' +
+            '<div class="aff-check' + checked + '" id="chk_' + topic.replace(/ /g,'_') + '_' + i + '"></div>' +
+            '<div class="aff-text">' + aff + '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    acc.appendChild(topicDiv);
+  });
+  updateCounter();
+}
+
+function toggleTopic(topic) {
+  var key = topic.replace(/ /g,'_');
+  var hdr = document.getElementById('hdr_' + key);
+  var body = document.getElementById('body_' + key);
+  hdr.classList.toggle('open');
+  body.classList.toggle('open');
+  // Show disclaimer for sensitive topics
+  if (SENSITIVE.indexOf(topic) > -1 && body.classList.contains('open')) {
+    document.getElementById('sensitiveDisclaimer').style.display = 'block';
+  }
+}
+
+function toggleAff(topic, idx) {
+  var total = getTotalSelected();
+  if (!selected[topic][idx] && total >= 50) return;
+  if (selected[topic][idx]) delete selected[topic][idx];
+  else selected[topic][idx] = true;
+  var key = topic.replace(/ /g,'_');
+  var chk = document.getElementById('chk_' + key + '_' + idx);
+  if (chk) chk.className = 'aff-check' + (selected[topic][idx] ? ' checked' : '');
+  var selEl = document.getElementById('sel_' + key);
+  var cnt = Object.keys(selected[topic]).length;
+  if (selEl) { selEl.textContent = cnt > 0 ? cnt + ' selected' : ''; selEl.className = 'topic-sel' + (cnt > 0 ? ' visible' : ''); }
+  updateCounter();
+}
+
+function addCustom() {
+  var inp = document.getElementById('customInput');
+  var val = inp.value.trim();
+  if (!val || getTotalSelected() >= 50) return;
+  customAff.push(val);
+  if (!selected['_custom']) selected['_custom'] = {};
+  selected['_custom'][customAff.length - 1] = true;
+  inp.value = '';
+  updateCounter();
+}
+
+function getTotalSelected() {
+  var t = 0;
+  Object.keys(selected).forEach(function(k) { t += Object.keys(selected[k]).length; });
+  return t;
+}
+
+function getSelectedAffirmations() {
+  var list = [];
+  Object.keys(PACKS).forEach(function(topic) {
+    if (selected[topic]) {
+      Object.keys(selected[topic]).forEach(function(i) { list.push(PACKS[topic][parseInt(i)]); });
+    }
+  });
+  customAff.forEach(function(a, i) { if (selected['_custom'] && selected['_custom'][i]) list.push(a); });
+  return list;
+}
+
+function updateCounter() {
+  var t = getTotalSelected();
+  document.getElementById('selCount').textContent = t;
+  document.getElementById('createBtn').disabled = t === 0;
+}
+
+// ── Loading ───────────────────────────────────────────────────────────────────
+function runLoading() {
+  var steps = ['ls1','ls2','ls3','ls4'];
+  var delays = [0, 1200, 2400, 3600];
+  steps.forEach(function(id, i) {
+    setTimeout(function() {
+      var el = document.getElementById(id);
+      el.classList.add('active');
+      el.querySelector('.step-icon').innerHTML = '<span class="spin">⟳</span>';
+      setTimeout(function() {
+        el.classList.remove('active');
+        el.classList.add('done');
+        el.querySelector('.step-icon').innerHTML = '';
+        if (i === steps.length - 1) {
+          setTimeout(function() { goTo(6); }, 600);
+        }
+      }, 900);
+    }, delays[i]);
+  });
+}
+
+// ── Player (Web Speech API) ───────────────────────────────────────────────────
+var affList = [];
+var uttIdx = 0;
+var isPlaying = false;
+
+function setupPlayer() {
+  affList = getSelectedAffirmations();
+  document.getElementById('affCount').textContent = affList.length;
+  document.getElementById('pTotal').textContent = formatTime(affList.length * 6);
+  document.getElementById('affPreview').textContent = 'Press play to begin...';
+  uttIdx = 0;
+  synth.cancel();
+}
+
+function togglePlay() {
+  if (isPlaying) pausePlayer();
+  else startPlayer();
+}
+
+function startPlayer() {
+  if (uttIdx >= affList.length) uttIdx = 0;
+  isPlaying = true;
+  document.getElementById('playPauseBtn').textContent = '⏸';
+  speakNext();
+}
+
+function pausePlayer() {
+  isPlaying = false;
+  synth.cancel();
+  document.getElementById('playPauseBtn').textContent = '▶';
+}
+
+function speakNext() {
+  if (!isPlaying || uttIdx >= affList.length) {
+    isPlaying = false;
+    document.getElementById('playPauseBtn').textContent = '▶';
+    document.getElementById('affPreview').textContent = 'Session complete.';
+    return;
+  }
+  var text = affList[uttIdx];
+  document.getElementById('affPreview').textContent = '"' + text + '"';
+  var pct = (uttIdx / affList.length) * 100;
+  document.getElementById('pFill').style.width = pct + '%';
+  document.getElementById('pCurrent').textContent = formatTime(uttIdx * 6);
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.85;
+  utt.pitch = 0.9;
+  utt.volume = 1;
+  utt.onend = function() {
+    uttIdx++;
+    setTimeout(function() { if (isPlaying) speakNext(); }, 1200);
+  };
+  synth.speak(utt);
+}
+
+function downloadAudio() {
+  // For demo: download a text file with all affirmations
+  var text = affList.join('\n\n');
+  var blob = new Blob([text], { type: 'text/plain' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'become-affirmations.txt';
+  a.click();
+}
+
+function formatTime(s) {
+  var m = Math.floor(s / 60);
+  var sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+</script>
+</body>
+</html>
