@@ -17,26 +17,18 @@
   --success: #4caf74;
 }
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 0; }
-
-/* Pages */
+body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 0; }
 .page { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 420px; min-height: 100vh; padding: 2.5rem 1.5rem; text-align: center; }
 .page.active { display: flex; }
-
-/* Progress dots */
 .dots { display: flex; gap: 6px; margin-bottom: 2.5rem; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
 .dot.active { background: var(--purple); width: 18px; border-radius: 3px; }
 .dot.done { background: var(--purple-light); opacity: 0.4; }
-
-/* Typography */
 .logo { font-size: 13px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 1rem; }
 h1 { font-size: 38px; font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.1; }
 h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
 .body-text { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
 .highlight { color: var(--purple-light); }
-
-/* Buttons */
 .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; }
 .btn-primary { background: var(--purple); color: #fff; }
 .btn-primary:hover { background: #6a5eb8; }
@@ -44,13 +36,9 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
 .btn-secondary { background: transparent; color: var(--muted); border: 0.5px solid var(--border); font-size: 14px; padding: 12px; }
 .btn-secondary:hover { border-color: var(--purple); color: var(--purple-light); }
 .btn-ghost { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; padding: 8px; text-decoration: underline; }
-
-/* Script box */
 .script-box { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; text-align: left; font-size: 15px; line-height: 1.8; color: var(--text); font-style: italic; }
-
-/* Record button */
 .record-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-.record-btn { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--purple); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; position: relative; }
+.record-btn { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--purple); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 .record-btn.recording { border-color: #e05555; background: rgba(224,85,85,0.1); animation: pulse 1.5s infinite; }
 .record-btn .dot-inner { width: 28px; height: 28px; border-radius: 50%; background: #e05555; transition: all 0.2s; }
 .record-btn.recording .dot-inner { border-radius: 4px; width: 22px; height: 22px; }
@@ -59,11 +47,9 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
 .record-label.active { color: #e05555; }
 .playback-row { display: flex; gap: 10px; width: 100%; }
 .playback-row button { flex: 1; }
-
-/* Affirmation picker */
 .counter { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
 .counter span { color: var(--purple-light); font-weight: 600; }
-.accordion { width: 100%; text-align: left; margin-bottom: 1rem; max-height: 45vh; overflow-y: auto; border-radius: 12px; border: 0.5px solid var(--border); }
+.accordion { width: 100%; text-align: left; margin-bottom: 1rem; max-height: 40vh; overflow-y: auto; border-radius: 12px; border: 0.5px solid var(--border); }
 .acc-topic { border-bottom: 0.5px solid var(--border); }
 .acc-topic:last-child { border-bottom: none; }
 .acc-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 500; background: var(--surface); transition: background 0.15s; user-select: none; }
@@ -82,15 +68,11 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
 .aff-check.checked { background: var(--purple); border-color: var(--purple); }
 .aff-check.checked::after { content: '✓'; font-size: 11px; color: #fff; }
 .aff-text { font-size: 13px; color: var(--text); line-height: 1.5; }
-
-/* Custom input */
 .custom-row { display: flex; gap: 8px; margin-bottom: 1rem; width: 100%; }
 .custom-input { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 13px; outline: none; }
 .custom-input:focus { border-color: var(--purple); }
 .custom-add { padding: 10px 16px; background: var(--surface); border: 0.5px solid var(--border); border-radius: 8px; color: var(--purple-light); font-size: 13px; cursor: pointer; white-space: nowrap; }
 .custom-add:hover { border-color: var(--purple); }
-
-/* Loading */
 .loading-steps { text-align: left; width: 100%; margin-bottom: 2rem; }
 .load-step { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--muted); }
 .load-step:last-child { border-bottom: none; }
@@ -101,18 +83,37 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
 .spin { display: inline-block; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Audio player */
+/* Voice tier selection */
+.tier-label { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
+.tiers { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+.tier { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; cursor: pointer; text-align: left; transition: all 0.2s; position: relative; }
+.tier.selected { border-color: var(--purple); background: #1a1730; }
+.tier-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.tier-name { font-size: 16px; font-weight: 600; color: var(--text); }
+.tier-badge { font-size: 10px; background: var(--purple); color: #fff; padding: 2px 8px; border-radius: 20px; display: none; }
+.tier.selected .tier-badge { display: inline; }
+.tier-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.tier-radio { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.tier.selected .tier-radio { border-color: var(--purple); background: var(--purple); }
+.tier.selected .tier-radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+.social-proof { font-size: 12px; color: var(--muted); margin-bottom: 1.5rem; opacity: 0.7; }
+.preview-btn { width: 100%; padding: 12px; border-radius: 10px; border: 0.5px solid var(--border); background: transparent; color: var(--purple-light); font-size: 14px; cursor: pointer; margin-bottom: 1rem; transition: all 0.2s; }
+.preview-btn:hover { border-color: var(--purple); background: #1a1730; }
+
+/* Sleep player */
 .player-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 16px; padding: 1.5rem; width: 100%; margin-bottom: 1.5rem; }
 .player-title { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
 .player-controls { display: flex; gap: 10px; align-items: center; }
-.play-pause { width: 48px; height: 48px; border-radius: 50%; background: var(--purple); border: none; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.play-pause { width: 56px; height: 56px; border-radius: 50%; background: var(--purple); border: none; color: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+.play-pause:hover { background: #6a5eb8; }
 .progress-wrap { flex: 1; }
 .progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
-.progress-fill { height: 100%; background: var(--purple); width: 0%; transition: width 0.1s; }
+.progress-fill { height: 100%; background: var(--purple); border-radius: 2px; width: 0%; transition: width 0.3s; }
 .progress-time { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
-.aff-preview { font-size: 13px; color: var(--muted); font-style: italic; margin-top: 1rem; min-height: 40px; line-height: 1.6; }
-
-/* Disclaimer */
+.aff-preview { font-size: 14px; color: var(--muted); font-style: italic; margin-top: 1rem; min-height: 48px; line-height: 1.6; transition: opacity 0.5s; }
+.wake-lock-status { font-size: 11px; color: var(--success); margin-top: 8px; opacity: 0; transition: opacity 0.3s; }
+.wake-lock-status.visible { opacity: 1; }
+.sleep-tip { font-size: 12px; color: var(--muted); background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem; line-height: 1.6; text-align: left; }
 .disclaimer { font-size: 11px; color: var(--muted); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 1rem; line-height: 1.6; text-align: left; }
 </style>
 </head>
@@ -144,9 +145,7 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
   <p class="body-text" style="margin-bottom:1rem;">Read the text below aloud, naturally, at your normal pace.</p>
   <div class="script-box">"Every day I grow stronger and more confident. I am grateful for this moment and all that I am becoming. My voice carries my truth and my truth has power."</div>
   <div class="record-wrap">
-    <button class="record-btn" id="recordBtn" onclick="toggleRecord()">
-      <div class="dot-inner"></div>
-    </button>
+    <button class="record-btn" id="recordBtn" onclick="toggleRecord()"><div class="dot-inner"></div></button>
     <span class="record-label" id="recordLabel">Tap to record</span>
   </div>
   <div class="playback-row" id="playbackRow" style="display:none;">
@@ -168,7 +167,7 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
     <input class="custom-input" id="customInput" placeholder="Add your own affirmation..." maxlength="120">
     <button class="custom-add" onclick="addCustom()">+ Add</button>
   </div>
-  <div class="disclaimer" id="sensitiveDisclaimer" style="display:none;">These affirmations support emotional wellbeing but are not a substitute for professional mental health support. If you're struggling, please reach out to a qualified professional.</div>
+  <div class="disclaimer" id="sensitiveDisclaimer" style="display:none;">These affirmations support emotional wellbeing but are not a substitute for professional mental health support.</div>
   <button class="btn btn-primary" id="createBtn" disabled onclick="goTo(5)">Create my audio →</button>
   <button class="btn-ghost" onclick="goTo(3)">← Back</button>
 </div>
@@ -179,7 +178,7 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
   <div class="logo">Become</div>
   <h2>Creating your voice...</h2>
   <p class="body-text" style="margin-bottom:1.5rem;">This takes about 30 seconds.</p>
-  <div class="loading-steps" id="loadingSteps">
+  <div class="loading-steps">
     <div class="load-step" id="ls1"><span class="step-icon">○</span>Preparing your voice sample</div>
     <div class="load-step" id="ls2"><span class="step-icon">○</span>Synthesizing your affirmations</div>
     <div class="load-step" id="ls3"><span class="step-icon">○</span>Tuning to your inner voice</div>
@@ -187,14 +186,65 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
   </div>
 </div>
 
-<!-- PAGE 6: Ready -->
+<!-- PAGE 6: Choose your voice tier -->
 <div class="page" id="page6">
   <div class="dots" id="dots6"></div>
   <div class="logo">Become</div>
-  <h2>Your voice is ready. 🌙</h2>
-  <p class="body-text" style="margin-bottom:1rem;">Set your volume to about 30% and play it softly as you fall asleep.</p>
+  <h2>Choose your voice</h2>
+  <p class="tier-label">How should your affirmations sound?</p>
+
+  <div class="tiers">
+    <div class="tier" id="tier-natural" onclick="selectTier('natural')">
+      <div class="tier-top">
+        <span class="tier-name">Natural</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="tier-badge">selected</span>
+          <div class="tier-radio"></div>
+        </div>
+      </div>
+      <div class="tier-desc">Closest to your recorded voice — clean and familiar</div>
+    </div>
+
+    <div class="tier selected" id="tier-deep" onclick="selectTier('deep')">
+      <div class="tier-top">
+        <span class="tier-name">Deep</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="tier-badge">selected</span>
+          <div class="tier-radio"></div>
+        </div>
+      </div>
+      <div class="tier-desc">Warmer and fuller — like a voice memo on a good day</div>
+    </div>
+
+    <div class="tier" id="tier-inner" onclick="selectTier('inner')">
+      <div class="tier-top">
+        <span class="tier-name">Inner</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="tier-badge">selected</span>
+          <div class="tier-radio"></div>
+        </div>
+      </div>
+      <div class="tier-desc">How you truly hear yourself from inside — deep and resonant</div>
+    </div>
+  </div>
+
+  <p class="social-proof">Most people choose Deep on their first night.</p>
+  <button class="preview-btn" onclick="previewTier()">▶ Preview this voice</button>
+  <button class="btn btn-primary" onclick="goTo(7)">Start my session →</button>
+  <button class="btn-ghost" onclick="goTo(4)">← Change affirmations</button>
+</div>
+
+<!-- PAGE 7: Sleep player -->
+<div class="page" id="page7">
+  <div class="dots" id="dots7"></div>
+  <div class="logo">Become</div>
+  <h2>Good night. 🌙</h2>
+  <p class="body-text" style="margin-bottom:1rem;">Your affirmations are playing. Keep your volume at 30% and let sleep come naturally.</p>
+
   <div class="player-card">
-    <div class="player-title">Your affirmation session · <span id="affCount">0</span> affirmations</div>
+    <div class="player-title">
+      <span id="tierLabel">Deep</span> voice · <span id="affCount">0</span> affirmations · looping
+    </div>
     <div class="player-controls">
       <button class="play-pause" id="playPauseBtn" onclick="togglePlay()">▶</button>
       <div class="progress-wrap">
@@ -203,14 +253,18 @@ h2 { font-size: 24px; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
       </div>
     </div>
     <div class="aff-preview" id="affPreview">Press play to begin...</div>
+    <div class="wake-lock-status" id="wakeLockStatus">● Screen will stay on while playing</div>
   </div>
-  <button class="btn btn-primary" onclick="downloadAudio()">↓ Download my affirmations</button>
-  <button class="btn btn-secondary" onclick="goTo(4)">Choose different affirmations</button>
+
+  <div class="sleep-tip">
+    💡 Place your phone face-up, plugged in, with brightness low. The screen will stay on automatically while your session plays.
+  </div>
+
+  <button class="btn btn-secondary" onclick="goTo(6)">← Change voice</button>
   <button class="btn-ghost" onclick="goTo(1)">Start over</button>
 </div>
 
 <script>
-// ── Data ──────────────────────────────────────────────────────────────────────
 var PACKS = {
   "Confidence": ["I trust my own voice and my own judgment.","I walk into every room knowing I belong there.","I am capable of far more than I give myself credit for.","My presence makes a difference.","I speak with clarity and people listen.","I back myself even when others don't.","Courage feels more natural to me every day.","I am becoming someone I am proud of.","I handle challenges with calm and capability.","My confidence grows with every step I take.","I don't need permission to take up space.","I believe in my ability to figure things out.","I am prepared, capable, and ready.","I lead with conviction and act with purpose.","The more I trust myself, the easier life becomes."],
   "Self-worth": ["I am enough exactly as I am right now.","My value does not depend on what I produce.","I deserve love without having to earn it.","I release the need for outside approval.","I am worthy of good things happening to me.","I treat myself with the same kindness I give others.","My worth is not up for debate.","I honor my needs without guilt.","I am allowed to choose myself.","I stop shrinking to make others comfortable.","I belong in the rooms I enter.","I am more than my mistakes and more than my past.","Every part of me deserves care and respect.","I no longer apologize for who I am.","I am someone worth knowing and worth loving."],
@@ -226,237 +280,240 @@ var PACKS = {
   "Depression": ["I give myself permission to feel without judgment.","I am not broken — I am going through something hard.","Small steps count. Today I did enough.","I have worth even on the days I feel nothing.","This heaviness is not permanent, even when it feels that way.","I am gentle with myself during this season.","I reach out when I need to — asking for help is strength.","Something in me keeps going, even now.","I deserve care and I am worthy of feeling better.","I notice the smallest good things and let them matter.","Rest is not giving up — it is what I need right now.","I have survived dark days before and I am still here.","I am allowed to take up space even when I feel invisible.","Healing is not linear and I stop punishing myself for that.","Even on hard days, I am moving toward the light."],
   "Emotional Healing": ["I give myself permission to heal at my own pace.","I am not what happened to me.","I release old pain with compassion, not force.","My wounds are becoming wisdom.","I stop carrying what was never mine to carry.","I grieve what needs to be grieved and then I let go.","Healing happens in layers and I honor every one.","I forgive myself for what I didn't know then.","I am allowed to outgrow people, places, and old versions of myself.","Every emotion I feel is valid and deserves to be heard.","I hold my past self with tenderness, not shame.","The parts of me that are broken are also the parts that let light in.","I am no longer defined by my hardest moments.","I choose to write a new story from here.","I am healing — slowly, fully, and for good."]
 };
-var SENSITIVE = ["Anxiety","Depression","Emotional Healing"];
-var selected = {};
-var customAff = [];
-var currentPage = 1;
-var mediaRecorder = null;
-var audioChunks = [];
-var recordedBlob = null;
-var recordedURL = null;
-var isRecording = false;
-var synth = window.speechSynthesis;
-var utterances = [];
-var uttIdx = 0;
-var isPlaying = false;
-var playInterval = null;
-var sessionStart = 0;
 
-// ── Navigation ────────────────────────────────────────────────────────────────
+var SENSITIVE = ["Anxiety","Depression","Emotional Healing"];
+var selected = {}, customAff = [], currentPage = 1;
+var mediaRecorder = null, audioChunks = [], recordedBlob = null, recordedURL = null, isRecording = false;
+var synth = window.speechSynthesis, affList = [], uttIdx = 0, isPlaying = false;
+var selectedTier = 'deep', wakeLock = null;
+
+// Tier presets — maps to processor settings
+var TIERS = {
+  natural: { label:'Natural', rate:0.9, pitch:1.0 },
+  deep:    { label:'Deep',    rate:0.85, pitch:0.88 },
+  inner:   { label:'Inner',  rate:0.8,  pitch:0.78 }
+};
+
 function goTo(n) {
-  document.getElementById('page' + currentPage).classList.remove('active');
+  document.getElementById('page'+currentPage).classList.remove('active');
   currentPage = n;
-  document.getElementById('page' + n).classList.add('active');
+  document.getElementById('page'+n).classList.add('active');
   renderDots(n);
-  if (n === 4) renderAccordion();
-  if (n === 5) runLoading();
-  if (n === 6) setupPlayer();
+  if(n===4) renderAccordion();
+  if(n===5) runLoading();
+  if(n===7) setupPlayer();
   window.scrollTo(0,0);
 }
 
 function renderDots(page) {
-  var el = document.getElementById('dots' + page);
-  if (!el) return;
-  var total = 5;
+  var el = document.getElementById('dots'+page); if(!el) return;
   var html = '';
-  for (var i = 1; i <= total; i++) {
-    var cls = i === page - 1 ? 'done' : i === page - 1 ? 'done' : '';
-    if (i < page - 1) cls = 'done';
-    else if (i === page - 1) cls = 'active';
-    html += '<div class="dot ' + cls + '"></div>';
+  for(var i=1;i<=6;i++) {
+    var cls = i<page-1?'done':i===page-1?'active':'';
+    html += '<div class="dot '+cls+'"></div>';
   }
   el.innerHTML = html;
 }
 
-// ── Voice recording ───────────────────────────────────────────────────────────
-function toggleRecord() {
-  if (isRecording) stopRecord();
-  else startRecord();
+function selectTier(tier) {
+  selectedTier = tier;
+  ['natural','deep','inner'].forEach(function(t) {
+    document.getElementById('tier-'+t).classList.toggle('selected', t===tier);
+  });
 }
 
+function previewTier() {
+  synth.cancel();
+  var t = TIERS[selectedTier];
+  var utt = new SpeechSynthesisUtterance("I am becoming someone I am proud of.");
+  utt.rate = t.rate; utt.pitch = t.pitch; utt.volume = 1;
+  synth.speak(utt);
+}
+
+// Recording
+function toggleRecord() { if(isRecording) stopRecord(); else startRecord(); }
 function startRecord() {
-  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
     audioChunks = [];
     mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = function(e) { audioChunks.push(e.data); };
+    mediaRecorder.ondataavailable = function(e){audioChunks.push(e.data);};
     mediaRecorder.onstop = function() {
-      recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      recordedBlob = new Blob(audioChunks,{type:'audio/webm'});
       recordedURL = URL.createObjectURL(recordedBlob);
-      document.getElementById('playbackRow').style.display = 'flex';
-      document.getElementById('voiceNext').style.display = 'block';
-      stream.getTracks().forEach(function(t) { t.stop(); });
+      document.getElementById('playbackRow').style.display='flex';
+      document.getElementById('voiceNext').style.display='block';
+      stream.getTracks().forEach(function(t){t.stop();});
     };
-    mediaRecorder.start();
-    isRecording = true;
+    mediaRecorder.start(); isRecording=true;
     document.getElementById('recordBtn').classList.add('recording');
-    document.getElementById('recordLabel').textContent = 'Recording... tap to stop';
+    document.getElementById('recordLabel').textContent='Recording... tap to stop';
     document.getElementById('recordLabel').classList.add('active');
-  }).catch(function() {
-    // If no mic permission, allow skipping for demo
-    document.getElementById('playbackRow').style.display = 'flex';
-    document.getElementById('voiceNext').style.display = 'block';
-    document.getElementById('recordLabel').textContent = 'Mic not available — demo mode';
+  }).catch(function(){
+    document.getElementById('playbackRow').style.display='flex';
+    document.getElementById('voiceNext').style.display='block';
+    document.getElementById('recordLabel').textContent='Mic unavailable — demo mode';
   });
 }
-
 function stopRecord() {
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-  isRecording = false;
+  if(mediaRecorder&&mediaRecorder.state!=='inactive') mediaRecorder.stop();
+  isRecording=false;
   document.getElementById('recordBtn').classList.remove('recording');
-  document.getElementById('recordLabel').textContent = 'Recording saved ✓';
+  document.getElementById('recordLabel').textContent='Recording saved ✓';
   document.getElementById('recordLabel').classList.remove('active');
 }
+function playBack(){if(recordedURL){var a=new Audio(recordedURL);a.play();}}
+function reRecord(){recordedBlob=null;recordedURL=null;document.getElementById('playbackRow').style.display='none';document.getElementById('voiceNext').style.display='none';document.getElementById('recordLabel').textContent='Tap to record';document.getElementById('recordLabel').classList.remove('active');}
 
-function playBack() {
-  if (!recordedURL) return;
-  var a = new Audio(recordedURL); a.play();
-}
-
-function reRecord() {
-  recordedBlob = null; recordedURL = null;
-  document.getElementById('playbackRow').style.display = 'none';
-  document.getElementById('voiceNext').style.display = 'none';
-  document.getElementById('recordLabel').textContent = 'Tap to record';
-  document.getElementById('recordLabel').classList.remove('active');
-}
-
-// ── Accordion ─────────────────────────────────────────────────────────────────
+// Accordion
 function renderAccordion() {
-  var acc = document.getElementById('accordion');
-  acc.innerHTML = '';
+  var acc=document.getElementById('accordion'); acc.innerHTML='';
   Object.keys(PACKS).forEach(function(topic) {
-    var items = PACKS[topic];
-    if (!selected[topic]) selected[topic] = {};
-    var topicDiv = document.createElement('div');
-    topicDiv.className = 'acc-topic';
-    var selCount = Object.keys(selected[topic]).length;
-    topicDiv.innerHTML =
-      '<div class="acc-header" id="hdr_' + topic.replace(/ /g,'_') + '" onclick="toggleTopic(\'' + topic + '\')">' +
-        '<div class="topic-meta">' +
-          '<span>' + topic + '</span>' +
-          '<span class="topic-count">' + items.length + ' affirmations</span>' +
-          '<span class="topic-sel' + (selCount > 0 ? ' visible' : '') + '" id="sel_' + topic.replace(/ /g,'_') + '">' + (selCount > 0 ? selCount + ' selected' : '') + '</span>' +
-        '</div>' +
-        '<span class="acc-arrow">▼</span>' +
-      '</div>' +
-      '<div class="acc-body" id="body_' + topic.replace(/ /g,'_') + '">' +
-        items.map(function(aff, i) {
-          var checked = selected[topic][i] ? ' checked' : '';
-          return '<div class="aff-item" onclick="toggleAff(\'' + topic + '\',' + i + ')">' +
-            '<div class="aff-check' + checked + '" id="chk_' + topic.replace(/ /g,'_') + '_' + i + '"></div>' +
-            '<div class="aff-text">' + aff + '</div>' +
-          '</div>';
-        }).join('') +
+    var items=PACKS[topic]; if(!selected[topic]) selected[topic]={};
+    var cnt=Object.keys(selected[topic]).length;
+    var div=document.createElement('div'); div.className='acc-topic';
+    div.innerHTML='<div class="acc-header" id="hdr_'+topic.replace(/ /g,'_')+'" onclick="toggleTopic(\''+topic+'\')">'+
+      '<div class="topic-meta"><span>'+topic+'</span><span class="topic-count">'+items.length+'</span>'+
+      '<span class="topic-sel'+(cnt>0?' visible':'')+'" id="sel_'+topic.replace(/ /g,'_')+'">'+(cnt>0?cnt+' selected':'')+'</span></div>'+
+      '<span class="acc-arrow">▼</span></div>'+
+      '<div class="acc-body" id="body_'+topic.replace(/ /g,'_')+'">'+
+      items.map(function(aff,i){var chk=selected[topic][i]?' checked':'';return '<div class="aff-item" onclick="toggleAff(\''+topic+'\','+i+')"><div class="aff-check'+chk+'" id="chk_'+topic.replace(/ /g,'_')+'_'+i+'"></div><div class="aff-text">'+aff+'</div></div>';}).join('')+
       '</div>';
-    acc.appendChild(topicDiv);
+    acc.appendChild(div);
   });
   updateCounter();
 }
-
 function toggleTopic(topic) {
-  var key = topic.replace(/ /g,'_');
-  var hdr = document.getElementById('hdr_' + key);
-  var body = document.getElementById('body_' + key);
-  hdr.classList.toggle('open');
-  body.classList.toggle('open');
-  // Show disclaimer for sensitive topics
-  if (SENSITIVE.indexOf(topic) > -1 && body.classList.contains('open')) {
-    document.getElementById('sensitiveDisclaimer').style.display = 'block';
-  }
+  var key=topic.replace(/ /g,'_');
+  document.getElementById('hdr_'+key).classList.toggle('open');
+  var body=document.getElementById('body_'+key); body.classList.toggle('open');
+  if(SENSITIVE.indexOf(topic)>-1&&body.classList.contains('open')) document.getElementById('sensitiveDisclaimer').style.display='block';
 }
-
-function toggleAff(topic, idx) {
-  var total = getTotalSelected();
-  if (!selected[topic][idx] && total >= 50) return;
-  if (selected[topic][idx]) delete selected[topic][idx];
-  else selected[topic][idx] = true;
-  var key = topic.replace(/ /g,'_');
-  var chk = document.getElementById('chk_' + key + '_' + idx);
-  if (chk) chk.className = 'aff-check' + (selected[topic][idx] ? ' checked' : '');
-  var selEl = document.getElementById('sel_' + key);
-  var cnt = Object.keys(selected[topic]).length;
-  if (selEl) { selEl.textContent = cnt > 0 ? cnt + ' selected' : ''; selEl.className = 'topic-sel' + (cnt > 0 ? ' visible' : ''); }
+function toggleAff(topic,idx) {
+  if(!selected[topic][idx]&&getTotalSelected()>=50) return;
+  if(selected[topic][idx]) delete selected[topic][idx]; else selected[topic][idx]=true;
+  var key=topic.replace(/ /g,'_');
+  var chk=document.getElementById('chk_'+key+'_'+idx);
+  if(chk) chk.className='aff-check'+(selected[topic][idx]?' checked':'');
+  var selEl=document.getElementById('sel_'+key), cnt=Object.keys(selected[topic]).length;
+  if(selEl){selEl.textContent=cnt>0?cnt+' selected':'';selEl.className='topic-sel'+(cnt>0?' visible':'');}
   updateCounter();
 }
-
 function addCustom() {
-  var inp = document.getElementById('customInput');
-  var val = inp.value.trim();
-  if (!val || getTotalSelected() >= 50) return;
-  customAff.push(val);
-  if (!selected['_custom']) selected['_custom'] = {};
-  selected['_custom'][customAff.length - 1] = true;
-  inp.value = '';
-  updateCounter();
+  var inp=document.getElementById('customInput'), val=inp.value.trim();
+  if(!val||getTotalSelected()>=50) return;
+  customAff.push(val); if(!selected['_custom']) selected['_custom']={};
+  selected['_custom'][customAff.length-1]=true; inp.value=''; updateCounter();
 }
+function getTotalSelected(){var t=0;Object.keys(selected).forEach(function(k){t+=Object.keys(selected[k]).length;});return t;}
+function getSelectedAffirmations(){var list=[];Object.keys(PACKS).forEach(function(topic){if(selected[topic])Object.keys(selected[topic]).forEach(function(i){list.push(PACKS[topic][parseInt(i)]);});});customAff.forEach(function(a,i){if(selected['_custom']&&selected['_custom'][i])list.push(a);});return list;}
+function updateCounter(){var t=getTotalSelected();document.getElementById('selCount').textContent=t;document.getElementById('createBtn').disabled=t===0;}
 
-function getTotalSelected() {
-  var t = 0;
-  Object.keys(selected).forEach(function(k) { t += Object.keys(selected[k]).length; });
-  return t;
-}
+// Supabase config
+var SUPABASE_URL = 'https://ysfczsogvlzpojvgurvc.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_T12SJ9sAPjqtTwWyVdhQrQ_LkL7mgX2';
+var generatedAudios = []; // stores base64 audio strings from Fish Audio
 
-function getSelectedAffirmations() {
-  var list = [];
-  Object.keys(PACKS).forEach(function(topic) {
-    if (selected[topic]) {
-      Object.keys(selected[topic]).forEach(function(i) { list.push(PACKS[topic][parseInt(i)]); });
-    }
-  });
-  customAff.forEach(function(a, i) { if (selected['_custom'] && selected['_custom'][i]) list.push(a); });
-  return list;
-}
-
-function updateCounter() {
-  var t = getTotalSelected();
-  document.getElementById('selCount').textContent = t;
-  document.getElementById('createBtn').disabled = t === 0;
-}
-
-// ── Loading ───────────────────────────────────────────────────────────────────
+// Loading — calls real Supabase function
 function runLoading() {
-  var steps = ['ls1','ls2','ls3','ls4'];
-  var delays = [0, 1200, 2400, 3600];
-  steps.forEach(function(id, i) {
-    setTimeout(function() {
-      var el = document.getElementById(id);
-      el.classList.add('active');
-      el.querySelector('.step-icon').innerHTML = '<span class="spin">⟳</span>';
+  setLoadStep('ls1', 'active');
+
+  // Step 1: convert recorded voice to base64
+  if (!recordedBlob) {
+    // Demo mode — no recording, skip to fake flow
+    runFakeLoading();
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result.split(',')[1];
+    setLoadStep('ls1', 'done');
+    setLoadStep('ls2', 'active');
+
+    // Step 2: call Supabase Edge Function
+    var affirmations = getSelectedAffirmations();
+    fetch(SUPABASE_URL + '/functions/v1/synthesize', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({
+        voice_sample_b64: base64,
+        affirmations: affirmations
+      })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) throw new Error(data.error);
+      generatedAudios = data.audios;
+      setLoadStep('ls2', 'done');
+      setLoadStep('ls3', 'active');
+
+      // Step 3: short pause for UX
       setTimeout(function() {
-        el.classList.remove('active');
-        el.classList.add('done');
-        el.querySelector('.step-icon').innerHTML = '';
-        if (i === steps.length - 1) {
+        setLoadStep('ls3', 'done');
+        setLoadStep('ls4', 'active');
+        setTimeout(function() {
+          setLoadStep('ls4', 'done');
           setTimeout(function() { goTo(6); }, 600);
-        }
-      }, 900);
-    }, delays[i]);
+        }, 800);
+      }, 800);
+    })
+    .catch(function(err) {
+      console.error('Synthesis error:', err);
+      // Fall back to robot voice on error
+      generatedAudios = [];
+      setLoadStep('ls2', 'done');
+      setLoadStep('ls3', 'done');
+      setLoadStep('ls4', 'done');
+      setTimeout(function() { goTo(6); }, 600);
+    });
+  };
+  reader.readAsDataURL(recordedBlob);
+}
+
+function setLoadStep(id, state) {
+  var el = document.getElementById(id);
+  el.classList.remove('active', 'done');
+  if(state === 'active') { el.classList.add('active'); el.querySelector('.step-icon').innerHTML='<span class="spin">⟳</span>'; }
+  if(state === 'done')   { el.classList.add('done');   el.querySelector('.step-icon').innerHTML=''; }
+}
+
+function runFakeLoading() {
+  var steps=['ls1','ls2','ls3','ls4'], delays=[0,1200,2400,3600];
+  steps.forEach(function(id,i){
+    setTimeout(function(){
+      setLoadStep(id,'active');
+      setTimeout(function(){ setLoadStep(id,'done'); if(i===steps.length-1) setTimeout(function(){goTo(6);},600); },900);
+    },delays[i]);
   });
 }
 
-// ── Player (Web Speech API) ───────────────────────────────────────────────────
-var affList = [];
-var uttIdx = 0;
-var isPlaying = false;
-
+// Sleep player with wake lock + looping
 function setupPlayer() {
   affList = getSelectedAffirmations();
+  var t = TIERS[selectedTier];
+  document.getElementById('tierLabel').textContent = t.label;
   document.getElementById('affCount').textContent = affList.length;
-  document.getElementById('pTotal').textContent = formatTime(affList.length * 6);
+  document.getElementById('pTotal').textContent = formatTime(affList.length * 7);
   document.getElementById('affPreview').textContent = 'Press play to begin...';
-  uttIdx = 0;
-  synth.cancel();
+  uttIdx = 0; synth.cancel();
 }
 
-function togglePlay() {
-  if (isPlaying) pausePlayer();
-  else startPlayer();
-}
+function togglePlay() { if(isPlaying) pausePlayer(); else startPlayer(); }
 
-function startPlayer() {
-  if (uttIdx >= affList.length) uttIdx = 0;
+async function startPlayer() {
+  if(uttIdx >= affList.length) uttIdx = 0;
   isPlaying = true;
   document.getElementById('playPauseBtn').textContent = '⏸';
+  // Request wake lock
+  try {
+    if('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      document.getElementById('wakeLockStatus').classList.add('visible');
+    }
+  } catch(e) { console.log('Wake lock not available:', e); }
   speakNext();
 }
 
@@ -464,46 +521,53 @@ function pausePlayer() {
   isPlaying = false;
   synth.cancel();
   document.getElementById('playPauseBtn').textContent = '▶';
+  // Release wake lock
+  if(wakeLock) { wakeLock.release(); wakeLock = null; }
+  document.getElementById('wakeLockStatus').classList.remove('visible');
 }
 
 function speakNext() {
-  if (!isPlaying || uttIdx >= affList.length) {
-    isPlaying = false;
-    document.getElementById('playPauseBtn').textContent = '▶';
-    document.getElementById('affPreview').textContent = 'Session complete.';
-    return;
-  }
+  if(!isPlaying) return;
+  if(uttIdx >= affList.length) uttIdx = 0;
   var text = affList[uttIdx];
+  var t = TIERS[selectedTier];
   document.getElementById('affPreview').textContent = '"' + text + '"';
-  var pct = (uttIdx / affList.length) * 100;
-  document.getElementById('pFill').style.width = pct + '%';
-  document.getElementById('pCurrent').textContent = formatTime(uttIdx * 6);
-  var utt = new SpeechSynthesisUtterance(text);
-  utt.rate = 0.85;
-  utt.pitch = 0.9;
-  utt.volume = 1;
-  utt.onend = function() {
-    uttIdx++;
-    setTimeout(function() { if (isPlaying) speakNext(); }, 1200);
-  };
-  synth.speak(utt);
+  document.getElementById('pFill').style.width = (uttIdx / affList.length * 100) + '%';
+  document.getElementById('pCurrent').textContent = formatTime(uttIdx * 7);
+
+  // Use real Fish Audio if available, otherwise fall back to robot voice
+  if(generatedAudios.length > 0 && generatedAudios[uttIdx]) {
+    var audioB64 = generatedAudios[uttIdx];
+    var audioBytes = Uint8Array.from(atob(audioB64), function(c){ return c.charCodeAt(0); });
+    var blob = new Blob([audioBytes], {type:'audio/wav'});
+    var url = URL.createObjectURL(blob);
+    var audio = new Audio(url);
+    audio.onended = function() {
+      URL.revokeObjectURL(url);
+      uttIdx++;
+      setTimeout(function(){ if(isPlaying) speakNext(); }, 1500);
+    };
+    audio.play();
+  } else {
+    // Robot voice fallback
+    var utt = new SpeechSynthesisUtterance(text);
+    utt.rate = t.rate; utt.pitch = t.pitch; utt.volume = 1;
+    utt.onend = function() {
+      uttIdx++;
+      setTimeout(function(){ if(isPlaying) speakNext(); }, 1500);
+    };
+    synth.speak(utt);
+  }
 }
 
-function downloadAudio() {
-  // For demo: download a text file with all affirmations
-  var text = affList.join('\n\n');
-  var blob = new Blob([text], { type: 'text/plain' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'become-affirmations.txt';
-  a.click();
-}
+function formatTime(s){var m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec;}
 
-function formatTime(s) {
-  var m = Math.floor(s / 60);
-  var sec = Math.floor(s % 60);
-  return m + ':' + (sec < 10 ? '0' : '') + sec;
-}
+// Re-request wake lock if page becomes visible again
+document.addEventListener('visibilitychange', async function() {
+  if(wakeLock !== null && document.visibilityState === 'visible' && isPlaying) {
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e) {}
+  }
+});
 </script>
 </body>
 </html>
