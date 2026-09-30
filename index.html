@@ -333,7 +333,13 @@ function previewTier() {
 // Recording
 function toggleRecord() { if(isRecording) stopRecord(); else startRecord(); }
 function startRecord() {
-  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+navigator.mediaDevices.getUserMedia({audio:{
+  echoCancellation: false,
+  noiseSuppression: false,
+  autoGainControl: false,
+  sampleRate: 44100,
+  channelCount: 1
+}}).then(function(stream) {
     audioChunks = [];
     mediaRecorder = new MediaRecorder(stream);
     mediaRecorder.ondataavailable = function(e){audioChunks.push(e.data);};
